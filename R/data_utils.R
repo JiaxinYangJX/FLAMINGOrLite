@@ -8,6 +8,7 @@ construct_obj_from_hic <- function(hic_file,
                                    chr_name,
                                    normalization)
 {
+  require(strawr)
   #### get data
   options(scipen = 999)
   chr_number <- gsub("chr","",chr_name)
