@@ -20,12 +20,14 @@ flamingo_domain <- function(temp_folder,
   # parallel setting
   require(parallel)
   cl <- parallel::makeCluster(nThread)
-  parallel::clusterEvalQ(cl, {
+  # parallel::clusterEvalQ(cl, {
     # source('model_utils.R')
     # source('flamingo_basic.R')
     # source('init_object.R')
-    library(FLAMINGOrLite)
-  })
+   # library(FLAMINGOrLite)
+  #})
+  parallel::clusterCall(cl, function() library(FLAMINGOrLite))
+
   parallel::clusterExport(cl,c('temp_folder','sample_rate','lambda','r','max_dist',
                                'error_threshold','max_iter','alpha','inf_dist'),
                                envir=environment())
