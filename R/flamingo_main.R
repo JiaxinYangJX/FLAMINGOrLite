@@ -44,8 +44,8 @@ flamingo_main <- function(hic_data,
     stop('The domain resolution is not an integer multiple of the fragment resolution!')
   }
 
-  # library(parallel)
-  require(Matrix)
+  library(parallel)
+  library(Matrix)
   # source('flamingo_domain.R')
   # source('flamingo_backbone.R')
   # source('data_utils.R')
