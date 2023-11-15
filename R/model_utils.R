@@ -16,16 +16,16 @@ if2pd <- function(input_if,
 }
 
 
-#### 
+####
 convert_index <- function(x)
 {
-  
+
   df <- expand.grid(as.vector(x),as.vector(x))
-  
+
   df[,3] <- (df[,2] == df[,1])*2-1
-  
+
   return(df)
-  
+
 }
 
 
@@ -57,7 +57,7 @@ get_measurement_set <- function(input_if,
 {
 
   # sparse matrix
-  input_if = as(input_if,'sparseMatrix')
+  input_if = as(input_if,'Matrix::sparseMatrix')
   col_j = findInterval(seq(input_if@x)-1,input_if@p[-1])+1
   row_i = input_if@i+1
   x_x = input_if@x
@@ -87,7 +87,7 @@ get_bind_set <- function(omega,
 }
 
 
-#### get the downsampled set of omega 
+#### get the downsampled set of omega
 get_sample_set <- function(omega,
                            sample_rate)
 {
@@ -100,7 +100,7 @@ get_sample_set <- function(omega,
 }
 
 
-#### get pre-calculated elements for adjoint linear projection 
+#### get pre-calculated elements for adjoint linear projection
 get_element_adjoint_linear <- function(omega)
 {
 
@@ -137,16 +137,16 @@ linear_proj <- function(omega,x)
   # where e_ab represents a matrix which has 1 at entry (a,b) and 0 otherwise.
 
   proj <- apply(omega,1,function(y){
-    
+
     y <- as.numeric(y)
-    
+
     p <- x[y[1],y[1]]+x[y[2],y[2]]-x[y[1],y[2]]-x[y[2],y[1]]
-    
+
     return(p)
   })
-  
+
   return(proj)
-  
+
 }
 
 
@@ -157,15 +157,15 @@ linear_proj_adj <- function(x,func_list,all_element,n)
   # f*(X) = SUM(X_i * omega_i)
 
   tmp <- sapply(func_list,function(y){
-    
+
     sum(x[y[,2]] * y[,1])
-    
+
   })
-  
+
   mat = Matrix::sparseMatrix(i=all_element[,1],j=all_element[,2],x=tmp,dims=c(n,n))
-  
+
   return(mat)
-  
+
 }
 
 
@@ -221,8 +221,8 @@ grad_B <- function(P,d,omega_subdiag,func_list_subdiag,all_element_subdiag)
 
 
 #### BB decent
-BB_decent <- function(P_prev, 
-                      P_curr, 
+BB_decent <- function(P_prev,
+                      P_curr,
                       grad_prev,
                       grad_curr)
 {
@@ -254,8 +254,8 @@ flamingo_grad <- function(P,
                           gamma,b,d,lambda,r)
 {
 
-  g <- grad_rank(P) + 
-       lambda * grad_B(P,d,omega_subdiag,func_list_subdiag,all_element_subdiag) + 
+  g <- grad_rank(P) +
+       lambda * grad_B(P,d,omega_subdiag,func_list_subdiag,all_element_subdiag) +
        r * grad_A(P,gamma,b,omega_sample,func_list_sample,all_element_sample)
 
   return(g)
@@ -263,7 +263,7 @@ flamingo_grad <- function(P,
 
 
 #### FLAMINGO optimization worker
-flamingo_worker <- function(omega_sample,                 
+flamingo_worker <- function(omega_sample,
                             omega_subdiag,
                             func_list_sample,
                             func_list_subdiag,
@@ -277,7 +277,7 @@ flamingo_worker <- function(omega_sample,
                             error_threshold=1e-3,
                             max_iter=300)
 
-{ 
+{
   # initialization
   q = 3
   P_curr <- matrix(rnorm(n*q),n,q)
@@ -313,7 +313,7 @@ flamingo_worker <- function(omega_sample,
     # BB decent
     P_next = BB_decent(P_prev, P_curr, grad_prev, grad_curr)
 
-    # update 
+    # update
     P_prev <- P_curr
     P_curr <- P_next
     error <- norm(P_curr - P_prev,"f")
@@ -337,15 +337,15 @@ rotation_matrix = function(x,y)
 {
 
   u=x/sqrt(sum(x^2))
-  
+
   v=y-sum(u*y)*u
   v=v/sqrt(sum(v^2))
-  
+
   cost=sum(x*y)/sqrt(sum(x^2))/sqrt(sum(y^2))
-  
+
   sint=sqrt(max(1-cost^2,0));
   #print(cost)
-  diag(length(x)) - u %*% t(u) - v %*% t(v) + 
+  diag(length(x)) - u %*% t(u) - v %*% t(v) +
     cbind(u,v) %*% matrix(c(cost,-sint,sint,cost), 2) %*% t(cbind(u,v))
 }
 
@@ -353,25 +353,25 @@ rotation_matrix = function(x,y)
 #### apply rotation
 rotate <- function(x,c,r)
 {
-  
+
   tmp_c <- t(apply(x,1,function(y){y-c}))
   z = as.matrix(tmp_c) %*% r
   z = t(apply(z,1,function(y){y+c}))
   return(z)
-  
+
 }
 
 
 #### get the start points of all domain
 # get_start_point <- function(all_points,val_id_list){
 #   start_id = sapply(val_id_list,function(x) x[1])
-  
+
 #   # get start point of each domain, valid
 #   start_coord = t(mapply(function(x,y) x[y,],all_points,start_id))
 
 #   start_coord = matrix(unlist(start_coord),ncol=3)
-#   start_coord = start_coord[-1,] 
-  
+#   start_coord = start_coord[-1,]
+
 #   return(start_coord)
 # }
 
@@ -379,24 +379,24 @@ rotate <- function(x,c,r)
 # #### get the end points of all domain
 # get_end_point <- function(all_points,val_id_list){
 #   end_id = sapply(val_id_list,function(x) tail(x,n=1))
-  
+
 #   # get start point of each domain, valid
 #   end_coord = t(mapply(function(x,y) x[y,],all_points,end_id))
 
 #   end_coord = matrix(unlist(end_coord),ncol=3)
 #   end_coord = end_coord[1:nrow(end_coord)-1,]
-  
+
 #   return(end_coord)
 # }
 
 
 get_point <- function(all_points,id_list){
-  
+
   # get start point of each domain, valid
   coord = t(mapply(function(x,y) x[y,],all_points,id_list))
 
   coord = matrix(unlist(coord),ncol=3)
-  
+
   return(coord)
 }
 
@@ -415,7 +415,7 @@ get_dist_vec <- function(all_points,id_list,pd,inf_dist){
 
   # observed distance between the adjoint point in two domain
   for(i in 1:(n-1)){
-    
+
     tmp_dist = pd[start_id[i],end_id[i]]
 
     if(is.na(tmp_dist) | tmp_dist == inf_dist){
@@ -436,18 +436,18 @@ get_dist_vec <- function(all_points,id_list,pd,inf_dist){
 #start optimization
 
 evaluate_dist <- function(start_point,end_point){
-  
+
   apply(start_point-end_point,1,function(x){norm(x,'2')})
-  
+
 }
 
 smt <- function(o){
   o_smt <- o
   for(i in 2:c(dim(o_smt)[1]-2)){
-    
+
     o_smt[i,] <- apply(o_smt[(i-1):(i+1),],2,mean)
-    
-    
+
+
   }
   return(o_smt)
 }

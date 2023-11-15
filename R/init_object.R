@@ -4,5 +4,5 @@
 #' @keywords FLAMINGO
 #' @return Objects named flamingo and flamingo_prediction are ready for use.
 #' @export
-setClass("flamingo", slots=list(IF="sparseMatrix", n_frag='numeric',chr_name='character'))
+setClass("flamingo", slots=list(IF="Matrix::sparseMatrix", n_frag='numeric',chr_name='character'))
 setClass("flamingo_prediction", slots=list(id="numeric", coordinates='matrix',input_n='numeric'))
