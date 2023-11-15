@@ -1,8 +1,4 @@
 
-
-
-
-
 construct_obj_from_hic <- function(hic_file,
                                    resolution,
                                    chr_name,

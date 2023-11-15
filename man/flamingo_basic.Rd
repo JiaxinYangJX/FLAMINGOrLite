@@ -2,7 +2,8 @@
 % Please edit documentation in R/flamingo_basic.R
 \name{flamingo_basic}
 \alias{flamingo_basic}
-\title{main function of flamingo}
+\title{main function of flamingo
+Core function for 3D genome structure reconstruction using low-rank matrix completion}
 \usage{
 flamingo_basic(
   input_if,
@@ -39,6 +40,7 @@ flamingo_basic(
 A flamingo_prediction object containing the fragment id and 3D coordinates
 }
 \description{
+main function of flamingo
 Core function for 3D genome structure reconstruction using low-rank matrix completion
 }
-\keyword{FLAMINGO}
+\keyword{flamingo_basic}

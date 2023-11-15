@@ -3,11 +3,11 @@
 \docType{class}
 \name{flamingo-class}
 \alias{flamingo-class}
-\title{flamingo.construct_flamingo_from_sparse_matrix}
+\title{Create an object named flamingo for data organization and an object named flamingo_prediction for result organization}
 \value{
 Objects named flamingo and flamingo_prediction are ready for use.
 }
 \description{
 Create an object named flamingo for data organization and an object named flamingo_prediction for result organization
 }
-\keyword{FLAMINGO}
+\keyword{flamingo_object}

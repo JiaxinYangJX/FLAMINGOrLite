@@ -2,7 +2,7 @@
 % Please edit documentation in R/flamingo_main.R
 \name{flamingo_main}
 \alias{flamingo_main}
-\title{flamingo.main_func}
+\title{Main function of hierarchical-FLAMINGO}
 \usage{
 flamingo_main(
   hic_data,
@@ -59,4 +59,4 @@ A data.frame containing the FLAMINGO predicted 3D structure.
 \description{
 Main function of hierarchical-FLAMINGO
 }
-\keyword{FLAMINGO}
+\keyword{flamingo_main}

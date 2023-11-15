@@ -1,5 +1,4 @@
 #' main function of flamingo
-#'
 #' Core function for 3D genome structure reconstruction using low-rank matrix completion
 #' @param input_if Input interaction frequency matrix.
 #' @param sample_rate Fraction of available entries in Hi-C to be used during the reconstruction. Default = 0.75.
@@ -10,7 +9,7 @@
 #' @param max_iter Maximum iterations. Default = 500.
 #' @param alpha Convertion factor between interaction frequency and pairwise distance. Default = -0.25.
 #' @param inf_dist Maximun allowed distance betwee any two points. Default = 2.
-#' @keywords FLAMINGO
+#' @keywords flamingo_basic
 #' @return A flamingo_prediction object containing the fragment id and 3D coordinates
 #' @export
 
@@ -36,7 +35,7 @@ flamingo_basic <- function(input_if,
 
   #### invalid idx
   rm_id = which(apply(input_if,1,max)==0)
-  
+
 
   #### identify the gram matrix of the input data
   M = pd2gram(pd)
@@ -87,15 +86,15 @@ flamingo_basic <- function(input_if,
 
 
   #### run flamingo
-  P <- flamingo_worker(omega_sample,                 
+  P <- flamingo_worker(omega_sample,
                        omega_subdiag,
                        func_list_sample,
                        func_list_subdiag,
                        all_element_sample,
                        all_element_subdiag,
                        b,d,n,lambda,r,error_threshold,max_iter)
-  
-  
+
+
   #### keep the valid samples
   if(length(rm_id)>0){
     frag_id <- (1:n)[-rm_id]

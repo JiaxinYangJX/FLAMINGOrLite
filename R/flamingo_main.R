@@ -1,5 +1,3 @@
-#' flamingo.main_func
-#'
 #' Main function of hierarchical-FLAMINGO
 #' @param hic_data Input Hi-C data. Now only support .hic
 #' @param file_format Foramt of the input hic data. Now only support .hic.
@@ -16,8 +14,7 @@
 #' @param inf_dist Maximun allowed distance betwee any two points. Default = 2.
 #' @param error_threshold Error thresholds for reconstruction. Default = 1e-3.
 #' @param max_iter Maximum iterations. Default = 500.
-
-#' @keywords FLAMINGO
+#' @keywords flamingo_main
 #' @return A data.frame containing the FLAMINGO predicted 3D structure.
 #' @export
 
