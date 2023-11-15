@@ -12,7 +12,7 @@ construct_obj_from_hic <- function(hic_file,
   options(scipen = 999)
   chr_number <- gsub("chr","",chr_name)
   normalized_data = strawr::straw(normalization,hic_file,chr_number,chr_number,unit='BP',binsize=resolution)
-  
+
   #### reformat contact frequency matrix
   n <- max(normalized_data[,2])/resolution + 1
   i_ind <- (normalized_data[,1]/resolution) + 1
@@ -22,7 +22,7 @@ construct_obj_from_hic <- function(hic_file,
   #### generate object
   res = new('flamingo',IF=input_if,n_frag=n,chr_name=chr_name)
   return(res)
-  
+
 }
 
 
@@ -69,7 +69,7 @@ construct_obj_from_hic <- function(hic_file,
 #   pd <- input_if^(alpha)
 #   res = new('flamingo',IF=input_if,PD=pd,n_frag=n,chr_name=chr_name)
 #   return(res)
-  
+
 # }
 
 
@@ -124,12 +124,12 @@ divide_domain <- function(flamingo_high_res_obj,
   options(scipen = 999)
 
   res = list()
-  
+
   bin_size = domain_res/frag_res
   n = flamingo_high_res_obj@n_frag
   chr = flamingo_high_res_obj@chr_name
   input_if = flamingo_high_res_obj@IF
-  
+
   # write out high resolution domain matrix
   print('Writing out temp files...')
   n_domain = ceiling(n/bin_size)
@@ -150,7 +150,7 @@ divide_domain <- function(flamingo_high_res_obj,
     # availabe data
     if (check_data_availability(tmp_input_if)){
       write.table(tmp_input_if,paste0(temp_folder,"/domain_data/IF_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
-      write.table(tmp_frag,paste0(temp_folder,"/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
+      # write.table(tmp_frag,paste0(temp_folder,"/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
     }
     # write.table(tmp_input_if,paste0("temp/domain_data/IF_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
     # write.table(tmp_frag,paste0("temp/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
