@@ -58,6 +58,7 @@ flamingo_main <- function(hic_data,
   temp_folder = paste('temp',Sys.time())
   dir.create(temp_folder)
   dir.create(paste0(temp_folder,'/domain_data'))
+  dir.create(paste0(temp_folder,'/genomic_loc'))
 
   #### generate flamingo object
   print('Preparing data...')

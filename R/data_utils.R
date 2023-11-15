@@ -150,7 +150,7 @@ divide_domain <- function(flamingo_high_res_obj,
     # availabe data
     if (check_data_availability(tmp_input_if)){
       write.table(tmp_input_if,paste0(temp_folder,"/domain_data/IF_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
-      # write.table(tmp_frag,paste0(temp_folder,"/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
+      write.table(tmp_frag,paste0(temp_folder,"/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
     }
     # write.table(tmp_input_if,paste0("temp/domain_data/IF_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
     # write.table(tmp_frag,paste0("temp/genomic_loc/genomic_loc_domain_",i,".txt"),col.names = F,row.names = F,sep="\t",quote=F)
