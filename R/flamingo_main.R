@@ -45,7 +45,7 @@ flamingo_main <- function(hic_data,
   }
 
   # library(parallel)
-  # library(Matrix)
+  require(Matrix)
   # source('flamingo_domain.R')
   # source('flamingo_backbone.R')
   # source('data_utils.R')
