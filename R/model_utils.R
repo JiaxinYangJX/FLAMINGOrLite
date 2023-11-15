@@ -57,7 +57,7 @@ get_measurement_set <- function(input_if,
 {
 
   # sparse matrix
-  input_if = as(input_if,'Matrix::sparseMatrix')
+  input_if = as(input_if,'sparseMatrix')
   col_j = findInterval(seq(input_if@x)-1,input_if@p[-1])+1
   row_i = input_if@i+1
   x_x = input_if@x
