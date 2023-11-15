@@ -5,7 +5,7 @@ assemble_structure <- function(flamingo_high_res_obj,
                                alpha,
                                inf_dist,
                                max_iter=500)
-                               
+
 {
   #### read all the infomation
   n = nrow(flamingo_backbone_prediction@coordinates) # numbers of domain
@@ -35,9 +35,9 @@ assemble_structure <- function(flamingo_high_res_obj,
     old_center <- apply(p_t_valid,2,mean) # based on valid point
     radius <- max(apply(p_t_valid,1,function(x){norm(x-old_center,'2')}))
     new_loc <- t(apply(p_t,1,function(x){
-      
+
       (x-old_center)/radius*scaler+tmp_center
-      
+
     }))
 
     # save structure
@@ -76,7 +76,7 @@ assemble_structure <- function(flamingo_high_res_obj,
   all_points[[1]] <- rotate(all_points[[1]],total_struc[1,],r_mat)
 
   # whole pd
-  input_if = flamingo_high_res_obj@IF
+  input_if = as.matrix(flamingo_high_res_obj@IF)
   input_if <- input_if + t(input_if)
   diag(input_if) <- diag(input_if)/2
   pd <- if2pd(input_if, alpha, inf_dist)
@@ -97,11 +97,11 @@ assemble_structure <- function(flamingo_high_res_obj,
     y_e <- get_point(all_points,end_id_list)[1:length(val_domain)-1,]
     d_tild <- evaluate_dist(y_s,y_e)
     g <- 4*(d_tild-d)*(y_s-y_e)
-    
+
     y = g-g_p
     s = y_s-y_s_p
     t_k = (sum(diag(t(s)%*%s)))/(sum(diag(t(s)%*%y)))
-    
+
     y_s_prim <- y_s-t_k*g
     g_p <- g
     y_s_p <- y_s
@@ -146,7 +146,7 @@ assemble_structure <- function(flamingo_high_res_obj,
     if(iter > max_iter){
       break
     }
-    
+
   }
 
   all_points_valid = data.frame()
