@@ -2,4 +2,5 @@
 
 export(flamingo_basic)
 export(flamingo_main)
+export(write.vtk)
 exportClasses(flamingo)
