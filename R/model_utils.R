@@ -318,7 +318,7 @@ flamingo_worker <- function(omega_sample,
     P_curr <- P_next
     error <- norm(P_curr - P_prev,"f")
 
-    gc()
+    # gc()
 
     if (error < error_threshold) break
 
