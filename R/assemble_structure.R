@@ -7,7 +7,7 @@ assemble_structure <- function(flamingo_high_res_obj,
                                max_iter=500)
 
 {
-  #### read all the infomation
+  #### read all the information
   n = nrow(flamingo_backbone_prediction@coordinates) # numbers of domain
   backbone_id <- flamingo_backbone_prediction@id # domain id
   backbone <- as.matrix(flamingo_backbone_prediction@coordinates) # backbone coord
@@ -32,8 +32,11 @@ assemble_structure <- function(flamingo_high_res_obj,
     tmp_center <- backbone[which(backbone_id==counter),]
 
     # rescale and put to the new center
-    old_center <- apply(p_t_valid,2,mean) # based on valid point
-    radius <- max(apply(p_t_valid,1,function(x){norm(x-old_center,'2')}))
+    # old_center <- apply(p_t_valid,2,mean) # based on valid point
+    # radius <- max(apply(p_t_valid,1,function(x){norm(x-old_center,'2')}))
+    
+    old_center <- apply(p_t,2,mean) # based on all point
+    radius <- max(apply(p_t,1,function(x){norm(x-old_center,'2')}))
     new_loc <- t(apply(p_t,1,function(x){
 
       (x-old_center)/radius*scaler+tmp_center
