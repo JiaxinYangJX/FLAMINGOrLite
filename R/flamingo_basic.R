@@ -4,8 +4,8 @@
 #' @param sample_rate Fraction of available entries in Hi-C to be used during the reconstruction. Default = 0.75.
 #' @param lambda Weights for all sampled entries. Default = 10.
 #' @param r Weights for distance between consecutive points. Default = 1.
-#' @param max_dist Maximum allowed distance betwee two consecutive points. Default = 0.01
-#' @param error_threshold Error thresholds for reconstruction. Default = 1e-3.
+#' @param max_dist Maximum allowed distance betwee two consecutive points. Default = 0.1
+#' @param error_threshold Error thresholds for reconstruction. Default = 1e-4.
 #' @param max_iter Maximum iterations. Default = 500.
 #' @param alpha Convertion factor between interaction frequency and pairwise distance. Default = -0.25.
 #' @param inf_dist Maximun allowed distance betwee any two points. Default = 2.
@@ -18,9 +18,9 @@ flamingo_basic <- function(input_if,
                            sample_rate = 0.75,
                            lambda = 10,
                            r = 1,
-                           max_dist = 0.01,
-                           error_threshold = 1e-3,
-                           max_iter = 300,
+                           max_dist = 0.1,
+                           error_threshold = 1e-4,
+                           max_iter = 500,
                            alpha = -0.25,
                            inf_dist = 2)
 {
@@ -28,7 +28,7 @@ flamingo_basic <- function(input_if,
 
   #### generate pairwise distance
   input_if = as.matrix(input_if)
-  input_if[which(is.na(input_if))] = NA
+  input_if[which(is.na(input_if))] = 0
 
   pd = if2pd(input_if,alpha,inf_dist)
   n = nrow(pd)
@@ -56,6 +56,7 @@ flamingo_basic <- function(input_if,
 
 
   #### down sample measurement set omega_sample
+  # add subdiagonal
   omega_sample = get_sample_set(omega,sample_rate)
   n_omega_sample = dim(omega_sample)[1]
 

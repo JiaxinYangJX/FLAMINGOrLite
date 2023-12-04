@@ -92,8 +92,11 @@ get_sample_set <- function(omega,
                            sample_rate)
 {
   n_omega = dim(omega)[1]
+  
+  # sample 
+  sample_set = sample(1:n_omega, sample_rate*n_omega)
 
-  omega_sample <<- omega[sample(1:n_omega, sample_rate*n_omega),]
+  omega_sample <<- omega[,]
 
   return(omega_sample)
 
