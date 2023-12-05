@@ -35,7 +35,7 @@ res = flamingo_main(hic_data='4DNFI1UEG1HD.hic',
 ```
 
 ## Key functions
-If the genome comprises over 200 fragments, we strongly recommend users employ `flamingo_main` rather than `flamingo_basic` for hierarchical structure reconstruction. Users should carefully choose appropriate values for *domain_res* and *frag_res* to strike a balance between the number of domains in the skeleton (genome size / domain_res) and the number of fragments within each domain (domain_res / frag_res).
+If the genome comprises over 200 fragments, we strongly recommend users employ `flamingo_main` rather than `flamingo_basic` for hierarchical structure reconstruction. Users should carefully choose appropriate values for *domain_res* and *frag_res* to **strike a balance between the number of domains in the skeleton (genome size / domain_res) and the number of fragments within each domain (domain_res / frag_res)**.
 
 ---
 ### `flamingo_main`
