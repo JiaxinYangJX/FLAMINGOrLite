@@ -1,6 +1,8 @@
 # FLAMINGOrLite
 Lite version of FLAMINGO, high-resolution 3D chromosome structures reconstruction based on Hi-C.
 
+Now only support `.hic` file. `.mcool` support is coming soon.
+
 ## Dependencies
 The implementation of the algorithm is based on R. It depends on 3 basic R packages: `strawr`, `parallel`, and `Matrix`.
 
@@ -80,3 +82,25 @@ A flamingo_prediction object containing the fragment id and 3D coordinates
 
 Type `?flamingo_basic` for detailed explanations of each argument.
 
+## visualize the 3D genome structure using ParaView
+ParaView is an open-source, multi-platform data analysis and visualization application. To visualize the 3D genome structure using FLAMINGO, the user needs to convert the 3D coordinates into a .vtk file and use the ParaView software to visualize the structure. In the `FLAMINGOrLite` package, a `write.vtk` function is provided.
+
+```
+write.vtk(points,lookup_table,name,opt_path)
+```
+
+Arguments:
+
+`points`: 3D coordinates predicted by FLAMINGO in the x,y,z format. 3 by N matrix.
+
+`lookup_table`: The annotation of each point, could be labels or scores, i.e. the compartment PC scores. N-dimensional vector
+
+`name`: output file name annotated within the file. String.
+
+`opt_path`: output file path including the file name. String.
+
+Output:
+
+A `.vtk` file stored at `opt_path` for ParaView visualization.
+
+Type `?write.vtk` for detailed explanations of each argument.
