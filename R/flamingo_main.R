@@ -55,7 +55,7 @@ flamingo_main <- function(hic_data,
   temp_folder = paste('temp',Sys.time())
   dir.create(temp_folder)
   dir.create(paste0(temp_folder,'/domain_data'))
-  dir.create(paste0(temp_folder,'/genomic_loc'))
+  # dir.create(paste0(temp_folder,'/genomic_loc'))
 
   #### generate flamingo object
   print('Preparing data...')
@@ -65,27 +65,27 @@ flamingo_main <- function(hic_data,
                                                    resolution = domain_res,
                                                    chr_name = chr_name,
                                                    normalization = normalization)
-
+    
     flamingo_high_res_obj <- construct_obj_from_hic(hic_file = hic_data,
                                                     resolution = frag_res,
                                                     chr_name = chr_name,
                                                     normalization = normalization)
-  # }else if(file_format=='mcool'){
-  #   flamingo_low_res_obj <- construct_obj_from_mcool(mcool_file = hic_data,
-  #                                                    resolution = domain_res,
-  #                                                    chr_name = chr_name,
-  #                                                    normalization = normalization)
-
-  #   flamingo_high_res_obj <- construct_obj_from_mcool(mcool_file = hic_data,
-  #                                                     resolution = frag_res,
-  #                                                     chr_name = chr_name,
-  #                                                     normalization = normalization)
+  }else if(file_format=='mcool'){
+    flamingo_low_res_obj <- construct_obj_from_mcool(mcool_file = hic_data,
+                                                     resolution = domain_res,
+                                                     chr_name = chr_name,
+                                                     normalization = normalization)
+    
+    flamingo_high_res_obj <- construct_obj_from_mcool(mcool_file = hic_data,
+                                                      resolution = frag_res,
+                                                      chr_name = chr_name,
+                                                      normalization = normalization)
   }else{
-    stop("file format must be .hic")
+    stop("file format must be .hic or .mcool")
   }
   print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
-
-
+  
+  
   #### Divide domain dataset
   print('Dividing domains...')
   a = Sys.time()
