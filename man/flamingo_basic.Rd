@@ -10,9 +10,9 @@ flamingo_basic(
   sample_rate = 0.75,
   lambda = 10,
   r = 1,
-  max_dist = 0.01,
-  error_threshold = 0.001,
-  max_iter = 300,
+  max_dist = 0.1,
+  error_threshold = 1e-04,
+  max_iter = 500,
   alpha = -0.25,
   inf_dist = 2
 )
@@ -26,9 +26,9 @@ flamingo_basic(
 
 \item{r}{Weights for distance between consecutive points. Default = 1.}
 
-\item{max_dist}{Maximum allowed distance betwee two consecutive points. Default = 0.01}
+\item{max_dist}{Maximum allowed distance betwee two consecutive points. Default = 0.1}
 
-\item{error_threshold}{Error thresholds for reconstruction. Default = 1e-3.}
+\item{error_threshold}{Error thresholds for reconstruction. Default = 1e-4.}
 
 \item{max_iter}{Maximum iterations. Default = 500.}
 
