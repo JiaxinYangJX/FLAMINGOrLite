@@ -1,7 +1,7 @@
 # FLAMINGOrLite
 Lite version of FLAMINGO, high-resolution 3D chromosome structures reconstruction based on Hi-C.
 
-Now only support `.hic` file. `.mcool` support is coming soon.
+Now only support `.hic` and `.mcool`.
 
 ## Dependencies
 The implementation of the algorithm is based on R. It depends on 3 basic R packages: `strawr`, `parallel`, and `Matrix`.
