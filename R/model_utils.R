@@ -348,8 +348,8 @@ rotation_matrix = function(x,y)
 
   sint=sqrt(max(1-cost^2,0));
   #print(cost)
-  diag(length(x)) - u %*% t(u) - v %*% t(v) +
-    cbind(u,v) %*% matrix(c(cost,-sint,sint,cost), 2) %*% t(cbind(u,v))
+  return(diag(length(x)) - u %*% t(u) - v %*% t(v) +
+    cbind(u,v) %*% matrix(c(cost,-sint,sint,cost), 2) %*% t(cbind(u,v)))
 }
 
 
