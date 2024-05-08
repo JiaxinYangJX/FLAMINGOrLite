@@ -68,7 +68,7 @@ construct_obj_from_mcool <- function(mcool_file,
     normalization_file = mcool_dat$bins[[normalization]]
     normalization_file <- normalization_file[chr_id]
     for(i in 1:(dim(csr_rawcount)[1])){
-      csr_rawcount[i,3] <- csr_rawcount[i,3]/(normalization_file[csr_rawcount[i,1]]*normalization_file[csr_rawcount[i,2]])
+      csr_rawcount[i,3] <- csr_rawcount[i,3]*(normalization_file[csr_rawcount[i,1]]*normalization_file[csr_rawcount[i,2]])
     }
   }
   input_if <- Matrix::sparseMatrix(i=csr_rawcount[,1],j=csr_rawcount[,2],x=csr_rawcount[,3],dims=c(n,n))
