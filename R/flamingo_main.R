@@ -52,7 +52,7 @@ flamingo_main <- function(hic_data,
   # source('assemble_structure.R')
 
   #### create temp folder
-  temp_folder = paste('temp',Sys.time())
+  temp_folder = "./tempfolder"
   dir.create(temp_folder)
   dir.create(paste0(temp_folder,'/domain_data'))
   # dir.create(paste0(temp_folder,'/genomic_loc'))
