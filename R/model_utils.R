@@ -1,10 +1,11 @@
 
+
 ############# utils ##################
 
 #### contact frequency to pairwise distance
 if2pd <- function(input_if,
                   alpha = -0.25,
-                  inf_dist = 2)
+                  inf_dist = 3)
 {
 
   pd = input_if ^ (alpha)
@@ -41,7 +42,7 @@ coord2gram <- function(P)
 #### pairwise distance to gram matrix
 pd2gram <- function(pd)
 {
-  n = nrow(pd)
+  n = dim(pd)[1]
   H = Matrix::Diagonal(x=rep(1,n))-1/n*rep(1,n)%*%t(rep(1,n))
   M = -1/2 * H %*% pd^2 %*% H
   M = as.matrix(M)
@@ -64,7 +65,7 @@ get_measurement_set <- function(input_if,
   df = data.frame(row_i,col_j,x_x)
 
   # contact frequency > 0 (if_threshold) ; off-diagonal
-  omega = subset(df[,1:2],df[,3] > if_threshold & df[,1] > df[,2])
+  omega = subset(df[,1:2],df[,3] > if_threshold & df[,1] != df[,2])
   omega = as.matrix(omega)
 
   return(omega)
@@ -73,34 +74,34 @@ get_measurement_set <- function(input_if,
 
 
 #### get the a bind of omega set
-get_bind_set <- function(omega,
-                         bind_size)
-{
+# get_bind_set <- function(omega,
+#                          bind_size)
+# {
 
-  bind_term = which(omega[,1]-omega[,2] == bind_size)
-  n_omega_bind = length(bind_term)
+#   bind_term = which(omega[,1]-omega[,2] == bind_size)
+#   n_omega_bind = length(bind_term)
 
-  omega_bind = omega[bind_term,,drop=FALSE] # avoid vector with only one sample
+#   omega_bind = omega[bind_term,,drop=FALSE] # avoid vector with only one sample
 
-  return(omega_bind)
+#   return(omega_bind)
 
-}
+# }
 
 
-#### get the downsampled set of omega
-get_sample_set <- function(omega,
-                           sample_rate)
-{
-  n_omega = dim(omega)[1]
+# #### get the downsampled set of omega
+# get_sample_set <- function(omega,
+#                            sample_rate)
+# {
+#   n_omega = dim(omega)[1]
   
-  # sample 
-  sample_set = sample(1:n_omega, sample_rate*n_omega)
+#   # sample 
+#   sample_set = sample(1:n_omega, sample_rate*n_omega)
 
-  omega_sample <<- omega[sample_set,]
+#   omega_sample <<- omega[sample_set,]
 
-  return(omega_sample)
+#   return(omega_sample)
 
-}
+# }
 
 
 #### get pre-calculated elements for adjoint linear projection
@@ -126,11 +127,7 @@ get_element_adjoint_linear <- function(omega)
 }
 
 
-
-
-
 ############# forward ################
-
 linear_proj <- function(omega,x)
 {
   # Linear projection: A(X)
@@ -152,7 +149,6 @@ linear_proj <- function(omega,x)
 
 }
 
-
 linear_proj_adj <- function(x,func_list,all_element,n)
 {
   # Linear projection: A(X)
@@ -171,8 +167,6 @@ linear_proj_adj <- function(x,func_list,all_element,n)
 
 }
 
-
-
 ################# Gradient ##########################
 
 #### trace(PP^T)
@@ -181,8 +175,6 @@ grad_rank <- function(P)
 {
   return(2*P)
 }
-
-
 
 #### || A(PP^T) + y ||^2
 # A^* (A(PP^T) + y) P
@@ -202,8 +194,6 @@ grad_linear <- function(P,y,omega,func_list,all_element)
 
 }
 
-
-
 #### || A(PP^T) - b + gamma ||^2
 # A^* (A(PP^T) - b + gamma) P
 grad_A <- function(P,gamma,b,omega_sample,func_list_sample,all_element_sample){
@@ -211,7 +201,6 @@ grad_A <- function(P,gamma,b,omega_sample,func_list_sample,all_element_sample){
   return(grad_linear(P,-b+gamma,omega_sample,func_list_sample,all_element_sample))
 
 }
-
 
 #### || B(PP^T) - d ||^2
 # B^* (B(PP^T) - d) P
@@ -258,8 +247,8 @@ flamingo_grad <- function(P,
 {
 
   g <- grad_rank(P) +
-       lambda * grad_B(P,d,omega_subdiag,func_list_subdiag,all_element_subdiag) +
-       r * grad_A(P,gamma,b,omega_sample,func_list_sample,all_element_sample)
+       2*lambda * grad_B(P,d,omega_subdiag,func_list_subdiag,all_element_subdiag) +
+       2*r * grad_A(P,gamma,b,omega_sample,func_list_sample,all_element_sample)
 
   return(g)
 }
@@ -287,8 +276,8 @@ flamingo_worker <- function(omega_sample,
   P_prev <- matrix(rnorm(n*q),n,q)
   gamma <- rep(0,nrow(omega_sample))
   error <- 10
-
-  for (iter in 1:max_iter)
+  iter <- 1
+  while (error > 1e-3)
   {
     # calculate gradient
     if(iter == 1){
@@ -322,16 +311,15 @@ flamingo_worker <- function(omega_sample,
     error <- norm(P_curr - P_prev,"f")
 
     # gc()
+    iter <- iter + 1
 
-    if (error < error_threshold) break
+    if (iter>200) break
 
   }
 
   return(P_next)
 
 }
-
-
 
 ################ rotation ######################
 
@@ -352,7 +340,6 @@ rotation_matrix = function(x,y)
     cbind(u,v) %*% matrix(c(cost,-sint,sint,cost), 2) %*% t(cbind(u,v)))
 }
 
-
 #### apply rotation
 rotate <- function(x,c,r)
 {
@@ -366,32 +353,22 @@ rotate <- function(x,c,r)
 
 
 #### get the start points of all domain
-# get_start_point <- function(all_points,val_id_list){
-#   start_id = sapply(val_id_list,function(x) x[1])
-
-#   # get start point of each domain, valid
-#   start_coord = t(mapply(function(x,y) x[y,],all_points,start_id))
-
-#   start_coord = matrix(unlist(start_coord),ncol=3)
-#   start_coord = start_coord[-1,]
-
-#   return(start_coord)
-# }
-
+get_start_point <- function(all_points){
+  n <- length(all_points)
+  t(sapply(all_points[2:(n)],function(x){
+    as.matrix(head(x,n=1))
+  }))
+  
+}
 
 # #### get the end points of all domain
-# get_end_point <- function(all_points,val_id_list){
-#   end_id = sapply(val_id_list,function(x) tail(x,n=1))
-
-#   # get start point of each domain, valid
-#   end_coord = t(mapply(function(x,y) x[y,],all_points,end_id))
-
-#   end_coord = matrix(unlist(end_coord),ncol=3)
-#   end_coord = end_coord[1:nrow(end_coord)-1,]
-
-#   return(end_coord)
-# }
-
+get_end_point <- function(all_points){
+  n <- length(all_points)
+  t(sapply(all_points[1:(n-1)],function(x){
+    as.matrix(tail(x,n=1))
+  }))
+  
+}
 
 get_point <- function(all_points,id_list){
 
@@ -403,47 +380,42 @@ get_point <- function(all_points,id_list){
   return(coord)
 }
 
-
 ave_dist <- function(r,pd){
   res = pd[row(pd)-col(pd)==r | col(pd)-row(pd)==r]
   return(mean(res[res<Inf],na.rm=T))
 }
 
-
-get_dist_vec <- function(all_points,id_list,pd,inf_dist){
+get_dist_vec <- function(all_points,id_list,pd){
   n <- length(all_points)
   start_id <- sapply(id_list[2:(n)],function(y){y[1]})
   end_id <- sapply(id_list[1:(n-1)],function(y){tail(y,n=1)})
   dist_vec <- c()
-
-  # observed distance between the adjoint point in two domain
   for(i in 1:(n-1)){
-
     tmp_dist = pd[start_id[i],end_id[i]]
-
-    if(is.na(tmp_dist) | tmp_dist == inf_dist){
-      # observation not available
+    if(is.na(tmp_dist)){
       tmp_dist = ave_dist(start_id[i]-end_id[i],pd)
-
+    }else if(tmp_dist == Inf){
+      tmp_dist = ave_dist(start_id[i]-end_id[i],pd)
     }else if(tmp_dist == 0){
       tmp_dist = 0.001
     }
-
     dist_vec = c(dist_vec,tmp_dist)
+    
   }
-
+  dist_vec[which(dist_vec > 3)] <- max(dist_vec[which(dist_vec<3)])
+  dist_vec[which(is.na(dist_vec))] <- mean(dist_vec,na.rm=T)
+  #dist_vec <- dist_vec/radius*scaler
   return(dist_vec)
 }
 
 
 #start optimization
-
 evaluate_dist <- function(start_point,end_point){
 
   apply(start_point-end_point,1,function(x){norm(x,'2')})
 
 }
-
+                   
 smt <- function(o){
   o_smt <- o
   for(i in 2:c(dim(o_smt)[1]-2)){
