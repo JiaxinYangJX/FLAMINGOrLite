@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # FLAMINGOrLite
 Lite version of FLAMINGO, high-resolution 3D chromosome structures reconstruction based on Hi-C.
 
