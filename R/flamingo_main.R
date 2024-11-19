@@ -46,7 +46,7 @@ flamingo_main <- function(hic_data,
 
   #### create temp folder
   
-  temp_folder = paste0("./temp")
+  temp_folder = paste0("./temp",b)
   print(temp_folder)
   dir.create(temp_folder)
   dir.create(paste0(temp_folder,'/domain_data'))
