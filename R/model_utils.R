@@ -1,5 +1,3 @@
-
-
 ############# utils ##################
 
 #### contact frequency to pairwise distance
