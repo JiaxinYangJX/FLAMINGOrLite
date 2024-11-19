@@ -85,7 +85,6 @@ flamingo_main <- function(hic_data,
   }
   print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
   
-  
   #### Divide domain dataset
   print('Dividing domains...')
   a = Sys.time()
@@ -95,7 +94,6 @@ flamingo_main <- function(hic_data,
                 frag_res = frag_res,
                 temp_folder = temp_folder)
   print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
-
 
   #### Reconstruct backbone
   print('Reconstructing backbones...')
@@ -113,7 +111,7 @@ flamingo_main <- function(hic_data,
 
   print('Assembling structures...')
   a = Sys.time()
-  res = assemble_structure(flamingo_high_res_obj,flamingo_backbone_prediction,flamingo_intra_domain_prediction,alpha,inf_dist,max_iter)
+  res = assemble_structure(flamingo_backbone_prediction, flamingo_high_res_obj, flamingo_intra_domain_prediction,max_iter)
   print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
   #### Reformat results
