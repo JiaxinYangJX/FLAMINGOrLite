@@ -18,11 +18,11 @@ flamingo_basic <- function(input_if,
                            sample_rate = 0.75,
                            lambda = 10,
                            r = 1,
-                           max_dist = 0.1,
-                           error_threshold = 1e-4,
-                           max_iter = 500,
+                           max_dist,
+                           error_threshold,
+                           max_iter,
                            alpha = -0.25,
-                           inf_dist = 2)
+                           inf_dist = 4)
 {
   require(Matrix)
 
@@ -47,38 +47,39 @@ flamingo_basic <- function(input_if,
 
 
   #### sub diagonal set
-  omega_subdiag = get_bind_set(omega,1)
-  n_omega_subdiag = nrow(omega_subdiag)
+  diag_term <- which(omega[,2]-omega[,1]==1)
+  omega_diag = omega[diag_term,]
+  omega <<- omega[unique(c(diag_term,sample(1:n_omega,sample_rate*n_omega))),]
+  n_omega <- dim(omega)[1]
+  
 
-  if (n_omega_subdiag==0) {
-    return(NULL)
+  if(length(diag_term)==1){
+    n_omega_diag=1
+    omega_diag = matrix(omega_diag,ncol=2)
   }
-
-
-  #### down sample measurement set omega_sample
-  # add subdiagonal
-  omega_sample = get_sample_set(omega,sample_rate)
-  n_omega_sample = dim(omega_sample)[1]
-
-  rm(omega)
+  else if(length(diag_term)==0){
+    return(NULL)
+  }else{
+    n_omega_diag <- dim(omega_diag)[1]
+  }
 
 
   #### pre-calculate related data
   # prepare for A*
-  precal_sample = get_element_adjoint_linear(omega_sample)
+  precal_sample = get_element_adjoint_linear(omega)
   func_list_sample = precal_sample$func_list
   all_element_sample = precal_sample$all_element
 
   # prepare for B*
-  precal_subdiag = get_element_adjoint_linear(omega_subdiag)
+  precal_subdiag = get_element_adjoint_linear(omega_diag)
   func_list_subdiag = precal_subdiag$func_list
   all_element_subdiag = precal_subdiag$all_element
 
 
   #### pre-calculate the b and d
-  b = linear_proj(omega_sample,M)
+  b = linear_proj(omega,M)
 
-  d = linear_proj(omega_subdiag,M)
+  d = linear_proj(omega_diag,M)
 
   # control the sub-diagonal
   for(i in 1:length(d)){
@@ -87,8 +88,8 @@ flamingo_basic <- function(input_if,
 
 
   #### run flamingo
-  P <- flamingo_worker(omega_sample,
-                       omega_subdiag,
+  P <- flamingo_worker(omega,
+                       omega_diag,
                        func_list_sample,
                        func_list_subdiag,
                        all_element_sample,
@@ -106,5 +107,3 @@ flamingo_basic <- function(input_if,
   return(new('flamingo_prediction',id = frag_id, coordinates = P,input_n = n))
 
 }
-
-
