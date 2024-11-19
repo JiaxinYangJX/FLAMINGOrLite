@@ -83,7 +83,7 @@ flamingo_main <- function(hic_data,
   }else{
     stop("file format must be .hic or .mcool")
   }
-  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
   
   
   #### Divide domain dataset
@@ -94,27 +94,27 @@ flamingo_main <- function(hic_data,
                 domain_res = domain_res,
                 frag_res = frag_res,
                 temp_folder = temp_folder)
-  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
 
   #### Reconstruct backbone
   print('Reconstructing backbones...')
   a = Sys.time()
   flamingo_backbone_prediction = flamingo_backbone(temp_folder,sample_rate,lambda,r,max_dist,error_threshold,max_iter,alpha,inf_dist)
-  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
 
   #### Reconstruct domain in parallel
   print('Reconstructing intra-domain structures...')
   a = Sys.time()
   flamingo_intra_domain_prediction = flamingo_domain(temp_folder,sample_rate,lambda,r,max_dist,error_threshold,max_iter,alpha,inf_dist,nThread)
-  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
 
   print('Assembling structures...')
   a = Sys.time()
   res = assemble_structure(flamingo_high_res_obj,flamingo_backbone_prediction,flamingo_intra_domain_prediction,alpha,inf_dist,max_iter)
-  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
   #### Reformat results
 
@@ -122,7 +122,7 @@ flamingo_main <- function(hic_data,
   res$start = (res$frag_id-1) * frag_res
   res$end = res$frag_id * frag_res
   res = res[,c('chr','start','end','x','y','z')]
-  print(paste('Reconstruction sucessfully! Finshed time: ',round(as.numeric(difftime(Sys.time(),b,units='mins')),digits=2), ' mins'))
+  print(paste('Reconstruction successful! Finished time: ',round(as.numeric(difftime(Sys.time(),b,units='mins')),digits=2), ' mins'))
 
   return(res)
 }
