@@ -45,7 +45,6 @@ construct_obj_from_mcool <- function(mcool_file,
   skip_normalization = 0
   if(!normalization %in% available_normalization){
     if(Default_normalization %in% names(mcool_dat$bins)){
-      print(paste('Not an available_normalization! Should be one of: ',paste(available_normalization, collapse = ', ')))
       print('Will proceed using data in weight as normalized data')
       normalization = 'weight'
     }else{
