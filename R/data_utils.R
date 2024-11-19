@@ -1,4 +1,3 @@
-
 construct_obj_from_hic <- function(hic_file,
                                    resolution,
                                    chr_name,
@@ -22,7 +21,6 @@ construct_obj_from_hic <- function(hic_file,
 
 }
 
-
 construct_obj_from_mcool <- function(mcool_file,
                                      resolution,
                                      chr_name,
@@ -33,16 +31,20 @@ construct_obj_from_mcool <- function(mcool_file,
   all_dir = rhdf5::h5ls(mcool_file)
   parent_dir = all_dir[1,2]
   available_resolutions = Brick_list_mcool_resolutions(mcool_file)
+  
   if(!resolution %in% available_resolutions){
     stop(
       paste('Not an available resolution! Resolution must be one of: ',paste(available_resolutions,collapse = ', '))
     )
   }
+  
   target_dir = paste(c("",parent_dir,resolution),collapse='/')
   mcool_dat = rhdf5::h5read(mcool_file,target_dir)
   available_normalization = setdiff(names(mcool_dat$bins),c('chrom','start','end','weight'))
+  
   Default_normalization = 'weight'
   skip_normalization = 0
+
   if(!normalization %in% available_normalization){
     if(Default_normalization %in% names(mcool_dat$bins)){
       print('Will proceed using data in weight as normalized data')
@@ -52,16 +54,19 @@ construct_obj_from_mcool <- function(mcool_file,
       skip_normalization = 1
     }
   }
+  
   csr_rawcount = data.frame(bin_1 = mcool_dat$pixels$bin1_id,
                             bin_2 = mcool_dat$pixels$bin2_id,
                             value = mcool_dat$pixels$count)                    
   chr_id <- which(mcool_dat$bins$chrom == chr_name)
   offset <- mcool_dat$indexes$chrom_offset[which(mcool_dat$chroms$name==chr_name)]
   n <- length(chr_id)
+  
   csr_rawcount <- subset(csr_rawcount,csr_rawcount[,1] %in% chr_id & csr_rawcount[,2] %in% chr_id)
   csr_rawcount[,1] <- csr_rawcount[,1]-offset
   csr_rawcount[,2] <- csr_rawcount[,2]-offset
   csr_rawcount <- as.matrix(csr_rawcount)
+  
   print(length(csr_rawcount[,1]))
   if(!skip_normalization){
     normalization_file = mcool_dat$bins[[normalization]]

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FLAMINGOrLite
 Lite version of FLAMINGO, high-resolution 3D chromosome structures reconstruction based on Hi-C.
 
@@ -104,3 +105,6 @@ Output:
 A `.vtk` file stored at `opt_path` for ParaView visualization.
 
 Type `?write.vtk` for detailed explanations of each argument.
+=======
+# FLAMINGOrevise
+>>>>>>> 5fcbb1911aed3de79b10c260b094b39c3bb746b7

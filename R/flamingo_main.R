@@ -11,7 +11,7 @@
 #' @param r Weights for distance between consecutive points. Default = 1.
 #' @param max_dist Maximum allowed distance betwee two consecutive points. Default = 0.01
 #' @param alpha Convertion factor between interaction frequency and pairwise distance. Default = -0.25.
-#' @param inf_dist Maximun allowed distance betwee any two points. Default = 2.
+#' @param inf_dist Maximun allowed distance betwee any two points. Default = 3.
 #' @param error_threshold Error thresholds for reconstruction. Default = 1e-3.
 #' @param max_iter Maximum iterations. Default = 500.
 #' @keywords flamingo_main
@@ -30,7 +30,7 @@ flamingo_main <- function(hic_data,
                           r = 1,
                           max_dist = 0.01,
                           alpha = -0.25,
-                          inf_dist = 2,
+                          inf_dist = 4,
                           error_threshold = 1e-3,
                           max_iter=500)
 {
@@ -43,16 +43,11 @@ flamingo_main <- function(hic_data,
 
   library(parallel)
   library(Matrix)
-  # source('flamingo_domain.R')
-  # source('flamingo_backbone.R')
-  # source('data_utils.R')
-  # source('init_object.R')
-  # source('model_utils.R')
-  # source('flamingo_basic.R')
-  # source('assemble_structure.R')
 
   #### create temp folder
+  
   temp_folder = paste0("./temp", b)
+  print(temp_folder)
   dir.create(temp_folder)
   dir.create(paste0(temp_folder,'/domain_data'))
   # dir.create(paste0(temp_folder,'/genomic_loc'))
@@ -83,7 +78,8 @@ flamingo_main <- function(hic_data,
   }else{
     stop("file format must be .hic or .mcool")
   }
-  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  
   
   #### Divide domain dataset
   print('Dividing domains...')
@@ -93,26 +89,27 @@ flamingo_main <- function(hic_data,
                 domain_res = domain_res,
                 frag_res = frag_res,
                 temp_folder = temp_folder)
-  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+
 
   #### Reconstruct backbone
   print('Reconstructing backbones...')
   a = Sys.time()
   flamingo_backbone_prediction = flamingo_backbone(temp_folder,sample_rate,lambda,r,max_dist,error_threshold,max_iter,alpha,inf_dist)
-  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
 
   #### Reconstruct domain in parallel
   print('Reconstructing intra-domain structures...')
   a = Sys.time()
   flamingo_intra_domain_prediction = flamingo_domain(temp_folder,sample_rate,lambda,r,max_dist,error_threshold,max_iter,alpha,inf_dist,nThread)
-  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
 
   print('Assembling structures...')
   a = Sys.time()
   res = assemble_structure(flamingo_backbone_prediction, flamingo_high_res_obj, flamingo_intra_domain_prediction,max_iter)
-  print(paste('Finished time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
+  print(paste('Finshed time: ',round(as.numeric(difftime(Sys.time(),a,units='mins')),digits=2), ' mins'))
 
   #### Reformat results
 
@@ -120,7 +117,7 @@ flamingo_main <- function(hic_data,
   res$start = (res$frag_id-1) * frag_res
   res$end = res$frag_id * frag_res
   res = res[,c('chr','start','end','x','y','z')]
-  print(paste('Reconstruction successful! Finished time: ',round(as.numeric(difftime(Sys.time(),b,units='mins')),digits=2), ' mins'))
+  print(paste('Reconstruction sucessfully! Finshed time: ',round(as.numeric(difftime(Sys.time(),b,units='mins')),digits=2), ' mins'))
 
   return(res)
 }

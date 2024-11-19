@@ -11,13 +11,13 @@ flamingo_main(
   frag_res,
   chr_name,
   normalization,
-  nThread = 1,
+  nThread = 20,
   sample_rate = 0.75,
   lambda = 10,
   r = 1,
   max_dist = 0.01,
   alpha = -0.25,
-  inf_dist = 2,
+  inf_dist = 4,
   error_threshold = 0.001,
   max_iter = 500
 )
@@ -47,7 +47,7 @@ flamingo_main(
 
 \item{alpha}{Convertion factor between interaction frequency and pairwise distance. Default = -0.25.}
 
-\item{inf_dist}{Maximun allowed distance betwee any two points. Default = 2.}
+\item{inf_dist}{Maximun allowed distance betwee any two points. Default = 3.}
 
 \item{error_threshold}{Error thresholds for reconstruction. Default = 1e-3.}
 

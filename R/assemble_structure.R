@@ -138,4 +138,3 @@ assemble_structure <- function(flamingo_backbone_prediction_obj,flamingo_final_r
   res = data.frame(frag_id = unlist(id_list),x=all_points[,1],y=all_points[,2],z=all_points[,3])
   return(res)
 }
-

@@ -25,34 +25,34 @@ flamingo_basic <- function(input_if,
                            inf_dist = 4)
 {
   require(Matrix)
-
+  
   #### generate pairwise distance
   input_if = as.matrix(input_if)
   input_if[which(is.na(input_if))] = 0
-
+  
   pd = if2pd(input_if,alpha,inf_dist)
   n = nrow(pd)
-
+  
   #### invalid idx
   rm_id = which(apply(input_if,1,max)==0)
-
-
+  
+  
   #### identify the gram matrix of the input data
   M = pd2gram(pd)
-
-
+  
+  
   #### define measurement set omega
   omega = get_measurement_set(input_if)
   n_omega = dim(omega)[1]
-
-
+  
+  
   #### sub diagonal set
   diag_term <- which(omega[,2]-omega[,1]==1)
   omega_diag = omega[diag_term,]
   omega <<- omega[unique(c(diag_term,sample(1:n_omega,sample_rate*n_omega))),]
   n_omega <- dim(omega)[1]
   
-
+  
   if(length(diag_term)==1){
     n_omega_diag=1
     omega_diag = matrix(omega_diag,ncol=2)
@@ -62,31 +62,31 @@ flamingo_basic <- function(input_if,
   }else{
     n_omega_diag <- dim(omega_diag)[1]
   }
-
-
+  
+  
   #### pre-calculate related data
   # prepare for A*
   precal_sample = get_element_adjoint_linear(omega)
   func_list_sample = precal_sample$func_list
   all_element_sample = precal_sample$all_element
-
+  
   # prepare for B*
   precal_subdiag = get_element_adjoint_linear(omega_diag)
   func_list_subdiag = precal_subdiag$func_list
   all_element_subdiag = precal_subdiag$all_element
-
-
+  
+  
   #### pre-calculate the b and d
   b = linear_proj(omega,M)
-
+  
   d = linear_proj(omega_diag,M)
-
+  
   # control the sub-diagonal
   for(i in 1:length(d)){
     d[i] = min(d[i],max_dist)
   }
-
-
+  
+  
   #### run flamingo
   P <- flamingo_worker(omega,
                        omega_diag,
@@ -95,15 +95,15 @@ flamingo_basic <- function(input_if,
                        all_element_sample,
                        all_element_subdiag,
                        b,d,n,lambda,r,error_threshold,max_iter)
-
-
+  
+  
   #### keep the valid samples
   if(length(rm_id)>0){
     frag_id <- (1:n)[-rm_id]
   }else{
     frag_id <- 1:n
   }
-
+  
   return(new('flamingo_prediction',id = frag_id, coordinates = P,input_n = n))
-
+  
 }
