@@ -4,7 +4,7 @@ Lite version of FLAMINGO, high-resolution 3D chromosome structures reconstructio
 Now only support `.hic` and `.mcool`.
 
 ## Dependencies
-The implementation of the algorithm is based on R. It depends on 3 basic R packages: `strawr`, `parallel`, and `Matrix`.
+The implementation of the algorithm is based on R. It depends on 3 basic R packages: `strawr`, `parallel`, `prodlim` and `Matrix`.
 
 ## Installation of the FLAMINGOrLite package
 ```
